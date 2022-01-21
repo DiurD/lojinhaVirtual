@@ -32,6 +32,6 @@ class Estoque():
         catalogo='------------------------------------\n'
         for i in self.quantidade:
             catalogo += '%d x %s (R$ %.2f) \n'%(i[list(i.keys())[0]], list(i.keys())[0].nome, list(i.keys())[0].preco)
-        catalogo+='------------------------------------\n'
+        catalogo+='------------------------------------'
         return catalogo
 
