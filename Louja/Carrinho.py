@@ -12,23 +12,22 @@ class Carrinho():
         for i in self.produtosNoCarrinho:
             if produto in i.keys():
                 quantidadeNoCarrinho = i[produto]
-
         print ('Quantidade no carrinho:' + str(quantidadeNoCarrinho))
-
 
         if estoque.verificaQuantia(produto)>=(quantidadeDeCompra+quantidadeNoCarrinho):
             if self.produtosNoCarrinho:
                 for i in self.produtosNoCarrinho:
                     if produto in i.keys():
                         i[produto]+=quantidadeDeCompra
+                        print('\n %d %s(s) adicionado(a)(s) ao carrinho com sucesso! Feche seu carrinho rápido para evitar que outros não acabem com seu produto!'%(quantidadeDeCompra,produto.nome,))
                         return
                     elif produto not in i.keys(): 
                         self.produtosNoCarrinho.append({produto:quantidadeDeCompra})
+                        print('\n %d novos %s(s) colocado(a)(s) ao carrinho com sucesso!'%(quantidadeDeCompra,produto.nome,))
                         return
                         
             else:
                 self.produtosNoCarrinho.append({produto:quantidadeDeCompra})
-            print('\n %d %s(s) adicionado(a)(s) ao carrinho com sucesso! Feche seu carrinho rápido para evitar que outros não acabem com seu produto!'%(quantidadeDeCompra,produto.nome,))
         else:
             print('\n Só possuímos %d produto(s) deste, por favor compre outro produto ou espere o reabastecimento'%estoque.verificaQuantia(produto))
 
