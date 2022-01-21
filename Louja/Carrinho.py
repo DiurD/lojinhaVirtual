@@ -5,53 +5,72 @@ class Carrinho():
         self.produtosNoCarrinho = list()
 
     def adicionaItemCarrinho(self,produto,quantidadeDeCompra,estoque):
-        if estoque.verificaQuantia(produto)>=quantidadeDeCompra:
-            if not self.produtosNoCarrinho:
+        print ('\nQuantidade em estoque:' + str(estoque.verificaQuantia(produto)))
+        print ('Quantidade desejada:' + str(quantidadeDeCompra))
+        quantidadeNoCarrinho =0
+
+        for i in self.produtosNoCarrinho:
+            if produto in i.keys():
+                quantidadeNoCarrinho = i[produto]
+
+        print ('Quantidade no carrinho:' + str(quantidadeNoCarrinho))
+
+
+        if estoque.verificaQuantia(produto)>=(quantidadeDeCompra+quantidadeNoCarrinho):
+            if self.produtosNoCarrinho:
                 for i in self.produtosNoCarrinho:
-                    if produto is i.keys():
+                    if produto in i.keys():
                         i[produto]+=quantidadeDeCompra
+                        return
+                    elif produto not in i.keys(): 
+                        self.produtosNoCarrinho.append({produto:quantidadeDeCompra})
+                        return
+                        
             else:
                 self.produtosNoCarrinho.append({produto:quantidadeDeCompra})
-
-            print('%d %s(s) adicionado(s) ao carrinho com sucesso! Feche seu carrinho rápido para evitar que outros acabem com a MEGALIQUIDAÇÃO'%(quantidadeDeCompra,produto.nome,))
+            print('\n %d %s(s) adicionado(a)(s) ao carrinho com sucesso! Feche seu carrinho rápido para evitar que outros não acabem com seu produto!'%(quantidadeDeCompra,produto.nome,))
         else:
-            print('Só possuímos mais %d produto(s) deste, por favor compre outro produto ou espere o reabastecimento'%estoque.verificaQuantia(produto))
+            print('\n Só possuímos %d produto(s) deste, por favor compre outro produto ou espere o reabastecimento'%estoque.verificaQuantia(produto))
 
 
-    def removeItemCarrinho(self,produto,quantidadeDeRemover,estoque):
-        if not self.produtosNoCarrinho:
+    def removeItemCarrinho(self,produto,quantidadeDeRemover):
+        if self.produtosNoCarrinho:
             for i in self.produtosNoCarrinho:
-                if produto is i.keys():
-                    if quantidadeDeRemover<=estoque.verificaQuantia(produto):
+                if produto in i.keys():
+                    if quantidadeDeRemover<=i[produto]:
                         i[produto]-=quantidadeDeRemover
+                        print ('\n %d %s(s) removidos do carrinho com sucesso!\n'%(quantidadeDeRemover,produto.nome))
+                        return
                     else:
-                        print('Impossível tirar mais produtos do que seu carrinho possui!')
+                        print('\nImpossível tirar mais produtos do que seu carrinho possui!')
         else:
-            print('Seu carrinho está vazio...')
+            print('\n Seu carrinho está vazio...\n')
  
 
     def verCarrinho(self):
-        if not self.produtosNoCarrinho:
-            print('Seu carrinho possui:\n ------------------------------\n')
+        if self.produtosNoCarrinho:
+            print('\nSeu carrinho possui:\n ------------------------------\n')
             for i in self.produtosNoCarrinho:
-                print('%d x %s, te custando R$ %.2f \n'%(i[list(i.keys())[0]], list(i.keys())[0].nome, list(i.keys())[0].preco))
+                print('%d x %s(s), te custando R$ %.2f \n'%(i[list(i.keys())[0]], list(i.keys())[0].nome, list(i.keys())[0].preco*i[list(i.keys())[0]]))
             print('------------------------------\n')
         else:
-            print('Seu carrinho está vazio...')
+            print('Seu carrinho está vazio...\n')
 
     def fecharCarrinho(self,estoque):
-        produtosRetirados=str()
-        precoTotal=float(0)
-        for i in self.produtosNoCarrinho:
-            for j,k in i:
-                estoque.retira_produto(j,k)
-                precoTotal+=j.preco
-                produtosRetirados+='%d x %s, te custando R$ %.2f \n'%(k, j.nome, j.preco)
-        self.produtosNoCarrinho.clear()
-        print('~~~~Carrinho esvaziado com sucesso!~~~~\n')
-        print('---------------NOTA FISCAL---------------\n')
-        print(produtosRetirados)
-        print('----VALOR FINAL: %.2f'%precoTotal)
+        if  self.produtosNoCarrinho:
+            produtosRetirados=str()
+            precoTotal=float(0)
+            for i in self.produtosNoCarrinho:
+                estoque.retira_produto(list(i.keys())[0],i[list(i.keys())[0]])
+                precoTotal+=list(i.keys())[0].preco*i[list(i.keys())[0]]
+                produtosRetirados+='%d x %s(s), te custando R$ %.2f \n'%(i[list(i.keys())[0]], list(i.keys())[0].nome, list(i.keys())[0].preco*i[list(i.keys())[0]])
+            self.produtosNoCarrinho.clear()
+            print('~~~~Compra realizada com sucesso!~~~~\n')
+            print('---------------NOTA FISCAL---------------\n')
+            print(produtosRetirados)
+            print('----VALOR FINAL: %.2f'%precoTotal)
+        else:
+            print('Seu carrinho está vazio, encerrando o aplicativo mesmo assim...\n')
 
 
 
