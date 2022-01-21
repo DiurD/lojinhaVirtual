@@ -74,19 +74,14 @@ class ChatBot():
     def escolhaProdutoEQuantidade(self,estoque):
         existeProduto=False
         compra = input('Digite sua escolha: ')
-        try:
-            quantidade = str()
-            for i in range(0,compra.index(' ')):
-                quantidade += compra[i]
-    
-            produtoDesejado = str()
-            for i in range(compra.index(' ')+1,len(compra)):
-                produtoDesejado += compra[i]
-        except:
-            print('\n!!!Insira os dados como requisitado!!!\n')
-            return False,False
 
-        if quantidade.isdecimal()&produtoDesejado.isalpha():
+        quantidade = compra.split(' ')[0]
+
+        produtoDesejado=str()
+        for i in range(compra.index(' ')+1,len(compra)):
+            produtoDesejado += compra[i]
+
+        if quantidade.isdecimal() and produtoDesejado:
             quantidade = int(quantidade)
             for i in estoque.quantidade:
                 if produtoDesejado.lower() == list(i.keys())[0].nome.lower():
